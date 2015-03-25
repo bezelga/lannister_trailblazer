@@ -52,8 +52,6 @@ module TransferMoney
           Trade.create(amount: amount, account_id: destination_account_id)
         end
       end
-
-      false
     end
   end
 end

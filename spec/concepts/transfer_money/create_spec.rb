@@ -3,7 +3,7 @@ require 'rails_helper'
 describe TransferMoney::Create do
   describe '.transfer' do
     subject(:transfer) do
-      described_class.call({ transfer_money: { source_account_id: source_account_id,
+      described_class.run({ transfer_money: { source_account_id: source_account_id,
                              destination_account_id: destination_account_id,
                              amount: amount } })
     end
@@ -40,11 +40,13 @@ describe TransferMoney::Create do
     end
 
     context 'not enough money to transfer' do
-      xit 'cancels the transfer and responds false' do
-        expect(transfer).to eq(false)
+      it 'cancels the transfer and responds false' do
+        response, operation = transfer
+        expect(response).to eq(false)
+        expect(operation.errors.messages).to eq({:amount=>['not enough balance']})
       end
 
-      xit 'does not change the accounts balance' do
+      it 'does not change the accounts balance' do
         expect{ transfer }.to_not change{ source_account_balance }
         expect{ transfer }.to_not change{ destination_account_balance }
       end
@@ -53,10 +55,10 @@ describe TransferMoney::Create do
     context 'when the amount is zero' do
       let(:amount) { 0 }
 
-      xit 'cancels the transfer' do
+      it 'cancels the transfer' do
         response, operation = transfer
         expect(response).to eq(false)
-        #expect(operation.errors).to eq({:amount=>["amount must be greater than 0"]})
+        expect(operation.errors.messages).to eq({:amount=>["amount must be greater than 0"]})
       end
     end
   end
