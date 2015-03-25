@@ -1,14 +1,18 @@
 require 'trailblazer'
 
 module TransferMoney
-  Transfer = Struct.new(:source_account_id,
-                        :destination_account_id,
-                        :amount)
+  class Transfer
+    include ActiveModel::Model
+    attr_reader :source_account_id, :destination_account_id, :amount
+  end
 
   class Create < Trailblazer::Operation
+    include ActiveModel
+    include CRUD
+    model Transfer
+
     contract do
-      include ActiveModel
-      #include Reform::Form::ActiveModel
+      include Reform::Form::ActiveModel
 
       property :source_account_id
       property :destination_account_id
