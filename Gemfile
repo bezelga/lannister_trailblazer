@@ -39,3 +39,5 @@ group :development, :test do
 end
 
 gem 'trailblazer'
+
+gem 'rspec-rails', group: :test
